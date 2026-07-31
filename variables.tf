@@ -9,11 +9,6 @@ variable "templated_locations" {
   default     = []
 }
 
-variable "tenant_id" {
-  type        = string
-  description = "Tenant ID for the Azure environment"
-}
-
 variable "subscription_details" {
   type = object({
     subscription_alias_enabled                            = optional(bool, false)
