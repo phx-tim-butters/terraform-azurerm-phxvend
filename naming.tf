@@ -6,7 +6,9 @@ locals {
       v
       ,
       {
-        resource_type = "resource_group"
+        resource_type         = "resource_group"
+        workload_abbreviation = try(v.workload_abbreviation, var.workload_abbreviation)
+        archetype             = try(v.archetype, var.archetype)
       })
     }
     ,
@@ -15,7 +17,9 @@ locals {
       v
       ,
       {
-        resource_type = "network_security_group"
+        resource_type         = "network_security_group"
+        workload_abbreviation = try(v.workload_abbreviation, var.workload_abbreviation)
+        archetype             = try(v.archetype, var.archetype)
       })
     }
     ,
@@ -24,7 +28,9 @@ locals {
       v
       ,
       {
-        resource_type = "route_table"
+        resource_type         = "route_table"
+        workload_abbreviation = try(v.workload_abbreviation, var.workload_abbreviation)
+        archetype             = try(v.archetype, var.archetype)
       })
     }
     ,
@@ -33,7 +39,9 @@ locals {
       v
       ,
       {
-        resource_type = "virtual_network"
+        resource_type         = "virtual_network"
+        workload_abbreviation = try(v.workload_abbreviation, var.workload_abbreviation)
+        archetype             = try(v.archetype, var.archetype)
       })
     }
     ,
@@ -42,7 +50,9 @@ locals {
       v
       ,
       {
-        resource_type = "storage_account"
+        resource_type         = "storage_account"
+        workload_abbreviation = try(v.workload_abbreviation, var.workload_abbreviation)
+        archetype             = try(v.archetype, var.archetype)
       }
       )
     }
