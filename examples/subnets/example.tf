@@ -56,6 +56,10 @@ locals {
       resource_name    = "snet-test5"
       address_prefixes = ["10.64.20.128/27"]
     }
+    GatewaySubnet = {
+      resource_name    = "GatewaySubnet"
+      address_prefixes = ["10.64.21.0/24"]
+    }
   }
 
   network_security_group_custom_rules = {

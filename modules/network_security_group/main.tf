@@ -1,7 +1,6 @@
 module "network_security_group" {
   source  = "Azure/avm-res-network-networksecuritygroup/azurerm"
   version = "0.5.1"
-  count   = local.create_nsg ? 1 : 0
 
   enable_telemetry = false
 

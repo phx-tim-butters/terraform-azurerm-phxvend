@@ -1,6 +1,6 @@
 module "network_security_group" {
   source = "../network_security_group"
-  count  = var.network_security_group_creation_enabled ? 1 : 0
+  count  = var.network_security_group_creation_enabled && local.create_network_security_group ? 1 : 0
 
   default_location = var.default_location
 
@@ -20,6 +20,11 @@ module "network_security_group" {
   tags = var.tags
 }
 
+# Do logic check here to see if this subnet requires a Network Security Group
+locals {
+  create_network_security_group = var.network_security_group_creation_enabled && !(strcontains(var.subnet.resource_name, "GatewaySubnet") || strcontains(var.subnet.resource_name, "AzureFirewall")) ? true : false
+}
+
 module "subnet" {
   source  = "Azure/avm-res-network-virtualnetwork/azurerm//modules/subnet"
   version = "0.19.0"
@@ -31,7 +36,7 @@ module "subnet" {
   delegations                       = try(var.subnet.delegations, [])
   private_endpoint_network_policies = try(var.subnet.private_endpoint_network_policies_enabled, false) ? "Enabled" : "Disabled"
 
-  network_security_group = var.network_security_group_creation_enabled ? {
+  network_security_group = local.create_network_security_group ? {
     id = module.network_security_group[0].resource_id
   } : null
 

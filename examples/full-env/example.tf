@@ -181,7 +181,6 @@ locals {
 module "vend" {
   source = "../.."
 
-  tenant_id            = local.tenant_id
   subscription_details = local.subscription_details
   default_location     = local.default_location
   templated_locations  = local.templated_locations

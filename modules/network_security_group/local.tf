@@ -1,12 +1,4 @@
 locals {
-  // If we are receiving no explicit location as a variable, use the location in the passed in resource object
-  location = var.default_location
-
-  create_nsg = strcontains(var.network_security_group_properties.subnet_name, "GatewaySubnet") || strcontains(var.network_security_group_properties.subnet_name, "AzureFirewall") ? false : true // Check to see if we need to create NSG, rules are we do for everything but Bastion and AzureFirewall
-}
-
-locals {
-
   merged_rules = merge(
     local.fixed_default_rules_inbound_intrasubnet,
     local.fixed_default_rules_inbound_deny,
