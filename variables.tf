@@ -31,19 +31,19 @@ variable "network_topology_details" {
   description = "Network Details for the environment"
   type = object({
     network_type                  = optional(string, "")
-    gw_enabled                    = optional(bool, false)
+    create_gateways               = optional(bool, false)
+    create_vwan                   = optional(bool, false)
     hub_peering_enabled           = optional(bool, true)
     hub_id                        = optional(map(string), {})
-    vwan_hub_id                   = optional(map(string), {})
-    vwan_routing_intent_enabled   = optional(bool, false)
+    virtual_wan_hubs              = optional(map(any), {})
     bastion_subnet_address_spaces = optional(list(string), [])
   })
   default = {
     network_type                  = ""
-    gw_enabled                    = false
+    create_gateways               = false
+    create_vwan                   = false
     hub_id                        = {}
-    vwan_hub_id                   = {}
-    vwan_routing_intent_enabled   = false
+    virtual_wan_hubs              = {}
     bastion_subnet_address_spaces = []
   }
 }
