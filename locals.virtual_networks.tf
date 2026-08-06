@@ -31,7 +31,7 @@ locals {
 
     vwan_security_configuration = {
       secure_internet_traffic = true
-      routing_intent_enabled  = var.network_topology_details.virtual_wan_hubs[try(vnet.vwan_key, local.default_virtual_wan_key)].routing_intent_enabled
+      routing_intent_enabled  = var.network_topology_details.virtual_wan_hubs[try(vnet.vwan_key, local.default_virtual_wan_key)][vnet.location].routing_intent_enabled
     }
 
     tags = merge(var.default_resource_group_tags, try(vnet.tags, {}))
