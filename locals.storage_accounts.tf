@@ -41,10 +41,11 @@ module "storage_account" {
   version  = var.module_avm_res_storage_storageaccount_version
   for_each = local.storage_accounts
 
-  location            = each.value.location
-  name                = module.naming["storage_account-${each.value.location}-${each.value.resource_name}"].global_name
-  resource_group_name = module.naming["resource_group-${each.value.location}-${each.value.resource_group_short_name}"].name
-  enable_telemetry    = false
+  location  = each.value.location
+  name      = module.naming["storage_account-${each.value.location}-${each.value.resource_name}"].global_name
+  parent_id = module.vend.resource_group_resource_ids[each.key]
+
+  enable_telemetry = false
 
   access_tier                     = each.value.access_tier
   account_replication_type        = each.value.account_replication_type

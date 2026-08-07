@@ -25,3 +25,10 @@ variable "module_avm_res_network_virtualnetwork_version" {
   const       = true
   default     = "0.5.1"
 }
+
+variable "module_avm_ptn_alz_sub_vending_version" {
+  description = "The version of the subscription vending module to use."
+  type        = string
+  const       = true
+  default     = "0.2.1"
+}

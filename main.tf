@@ -1,6 +1,6 @@
 module "vend" {
   source  = "Azure/avm-ptn-alz-sub-vending/azure"
-  version = "0.2.1"
+  version = var.module_avm_ptn_alz_sub_vending_version
 
   enable_telemetry = false
 
