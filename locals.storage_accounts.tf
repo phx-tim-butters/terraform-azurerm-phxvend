@@ -33,17 +33,34 @@ locals {
     }
   }
 
-  storage_accounts = merge(merge(values(local.templated_storage_accounts)...), var.storage_accounts)
+  # Create a merged map of all Storage Accounts based on; templated storage accounts across all templated regions, and any custom storage accounts defined in the var.storage_accounts variable.
+  # This feeds the naming model to generate a list of names for the storage accounts.
+  storage_accounts_merged = merge(
+    merge(values(local.templated_storage_accounts)...)
+    ,
+    var.storage_accounts
+  )
+
+  # Generate a readied list of Storage Accounts to pass to vend module, grab the generated name from the naming module. Establish Key name, and final merge of tags.
+  storage_accounts = { for key, st in local.storage_accounts_merged : key => merge(
+    st,
+    {
+      name     = module.naming["storage_account-${st.location}-${st.resource_name}"].global_name
+      key_name = "${st.location}-${st.resource_name}"
+    })
+  }
 }
 
+
 module "storage_account" {
-  source   = "Azure/avm-res-storage-storageaccount/azurerm"
-  version  = var.module_avm_res_storage_storageaccount_version
+  source  = "Azure/avm-res-storage-storageaccount/azurerm"
+  version = var.module_avm_res_storage_storageaccount_version
+
   for_each = local.storage_accounts
 
   location  = each.value.location
-  name      = module.naming["storage_account-${each.value.location}-${each.value.resource_name}"].global_name
-  parent_id = module.vend.resource_group_resource_ids[each.key]
+  name      = each.value.name
+  parent_id = module.vend.resource_group_resource_ids["${each.value.location}-${each.value.resource_group_short_name}"]
 
   enable_telemetry = false
 
@@ -61,9 +78,5 @@ module "storage_account" {
   }
 
   tags = each.value.tags
-
-  depends_on = [
-    module.vend,
-  ]
 }
 

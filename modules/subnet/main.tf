@@ -32,7 +32,7 @@ module "subnet" {
   name                              = var.subnet.resource_name
   parent_id                         = var.virtual_network_id
   address_prefixes                  = var.subnet.address_prefixes
-  service_endpoints_with_location   = try(var.subnet.service_endpoints, [])
+  service_endpoints                 = try(toset(var.subnet.service_endpoints), [])
   delegations                       = try(var.subnet.delegations, [])
   private_endpoint_network_policies = try(var.subnet.private_endpoint_network_policies_enabled, false) ? "Enabled" : "Disabled"
 

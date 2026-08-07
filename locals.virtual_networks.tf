@@ -26,13 +26,12 @@ locals {
 
     hub_network_resource_id = var.network_topology_details.hub_peering_enabled && var.network_topology_details.network_type != "Vwan" ? try(var.network_topology_details.hub_id[vnet.location], null) : null
 
-
     vwan_hub_resource_id = var.network_topology_details.hub_peering_enabled && var.network_topology_details.network_type == "Vwan" ? var.network_topology_details.virtual_wan_hubs[try(vnet.vwan_key, local.default_virtual_wan_key)][vnet.location].id : null
 
-    vwan_security_configuration = {
+    vwan_security_configuration = var.network_topology_details.network_type == "Vwan" ? {
       secure_internet_traffic = true
       routing_intent_enabled  = var.network_topology_details.virtual_wan_hubs[try(vnet.vwan_key, local.default_virtual_wan_key)][vnet.location].routing_intent_enabled
-    }
+    } : {}
 
     tags = merge(var.default_resource_group_tags, try(vnet.tags, {}))
     }

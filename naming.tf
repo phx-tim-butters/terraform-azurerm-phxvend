@@ -12,6 +12,18 @@ locals {
       })
     }
     ,
+    # Construct Namings for Storage Accounts
+    { for k, v in local.storage_accounts_merged : "storage_account-${v.location}-${v.resource_name}" => merge(
+      v
+      ,
+      {
+        resource_type         = "storage_account"
+        workload_abbreviation = try(v.workload_abbreviation, var.workload_abbreviation)
+        archetype             = try(v.archetype, var.archetype)
+      }
+      )
+    }
+    ,
     # Construct Namings for Additional Network Security Groups not tied to a subnet
     { for k, v in local.default_region_resource_groups : "network_security_group-${v.location}-${v.resource_group_short_name}-${v.resource_name}" => merge(
       v
@@ -44,22 +56,8 @@ locals {
         archetype             = try(v.archetype, var.archetype)
       })
     }
-    ,
-    # Construct Namings for Storage Accounts
-    { for k, v in local.storage_accounts : "storage_account-${v.location}-${v.resource_name}" => merge(
-      v
-      ,
-      {
-        resource_type         = "storage_account"
-        workload_abbreviation = try(v.workload_abbreviation, var.workload_abbreviation)
-        archetype             = try(v.archetype, var.archetype)
-      }
-      )
-    }
   )
 }
-
-
 
 # For generated list of Resources within this module, generate all names
 module "naming" {

@@ -77,4 +77,6 @@ module "network_security_group" {
   network_security_group_name         = local.network_security_group_name
   network_security_group_custom_rules = local.network_security_group_custom_rules
   network_security_group_properties   = local.network_security_group_properties
+
+  module_avm_res_network_networksecuritygroup_version = "0.5.1"
 }

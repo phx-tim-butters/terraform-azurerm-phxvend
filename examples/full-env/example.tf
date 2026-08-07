@@ -202,4 +202,9 @@ module "vend" {
 
   network_security_groups = local.network_security_groups
   route_tables            = local.route_tables
+
+  module_phx_naming_version                           = "0.1.8"
+  module_avm_res_storage_storageaccount_version       = "0.7.4"
+  module_avm_res_network_networksecuritygroup_version = "0.5.1"
+  module_avm_res_network_virtualnetwork_version       = "0.20.0"
 }

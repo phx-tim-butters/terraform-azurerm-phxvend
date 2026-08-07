@@ -41,16 +41,18 @@ locals {
       address_prefixes = ["10.64.20.0/27", "10.64.20.192/27"]
     }
     subnet2 = {
-      resource_name    = "snet-test2"
-      address_prefixes = ["10.64.20.32/27"]
+      resource_name     = "snet-test2"
+      address_prefixes  = ["10.64.20.32/27"]
+      service_endpoints = ["Microsoft.Storage"]
     }
     subnet3 = {
       resource_name    = "snet-test3"
       address_prefixes = ["10.64.20.64/27"]
     }
     subnet4 = {
-      resource_name    = "snet-test4"
-      address_prefixes = ["10.64.20.96/27"]
+      resource_name     = "snet-test4"
+      address_prefixes  = ["10.64.20.96/27"]
+      service_endpoints = ["Microsoft.KeyVault"]
     }
     subnet5 = {
       resource_name    = "snet-test5"
@@ -109,4 +111,6 @@ module "subnet" {
   subnet                              = each.value
   network_security_group_name_prefix  = local.network_security_group_prefix
   network_security_group_custom_rules = local.network_security_group_custom_rules
+
+  module_avm_res_network_virtualnetwork_version = "0.20.0"
 }

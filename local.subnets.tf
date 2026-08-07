@@ -48,4 +48,6 @@ module "subnets" {
   depends_on = [
     module.vend
   ]
+
+  module_avm_res_network_virtualnetwork_version = var.module_avm_res_network_virtualnetwork_version
 }

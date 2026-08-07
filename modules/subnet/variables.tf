@@ -12,12 +12,9 @@ variable "bastion_subnet_address_spaces" {
 variable "subnet" {
   description = "Subnet to create as object"
   type = object({
-    resource_name    = string
-    address_prefixes = list(string)
-    service_endpoints = optional(list(object({
-      service   = string
-      locations = optional(list(string), [])
-    })), [])
+    resource_name     = string
+    address_prefixes  = list(string)
+    service_endpoints = optional(set(string), [])
     delegations = optional(list(object({
       name = string
       service_delegation = object({
