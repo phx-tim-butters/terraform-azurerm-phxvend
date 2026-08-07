@@ -1,6 +1,6 @@
 module "network_security_group" {
   source  = "Azure/avm-res-network-networksecuritygroup/azurerm"
-  version = "0.5.1"
+  version = var.module_avm_res_network_networksecuritygroup_version
 
   enable_telemetry = false
 

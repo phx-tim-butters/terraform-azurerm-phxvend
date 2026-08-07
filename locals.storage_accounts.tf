@@ -38,7 +38,7 @@ locals {
 
 module "storage_account" {
   source   = "Azure/avm-res-storage-storageaccount/azurerm"
-  version  = "0.6.3"
+  version  = var.module_avm_res_storage_storageaccount_version
   for_each = local.storage_accounts
 
   location            = each.value.location

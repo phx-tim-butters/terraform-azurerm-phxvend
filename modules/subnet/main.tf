@@ -27,7 +27,7 @@ locals {
 
 module "subnet" {
   source  = "Azure/avm-res-network-virtualnetwork/azurerm//modules/subnet"
-  version = "0.19.0"
+  version = var.module_avm_res_network_virtualnetwork_version
 
   name                              = var.subnet.resource_name
   parent_id                         = var.virtual_network_id
