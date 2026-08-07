@@ -207,9 +207,7 @@ variable "storage_accounts" {
     resource_name             = string
     resource_group_short_name = string
     location                  = string
-    account_replication_type  = string
-    access_tier               = string
-    account_tier              = string
+    account_sku_name          = string
     shared_access_key_enabled = bool
     network_rules = object({
       creator_ip_rule = bool

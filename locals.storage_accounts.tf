@@ -2,9 +2,7 @@ locals {
   default_storage_accounts = {
     flow = {
       resource_group_short_name = "storage"
-      account_replication_type  = "LRS"
-      access_tier               = "Hot"
-      account_tier              = "Standard"
+      account_sku_name          = "Standard_LRS"
       shared_access_key_enabled = true
       tags = merge({ for key, value in var.default_resource_group_tags : key => replace(replace(value, "*GROUPNAME*", "Storage Resources"), "*ARCH*", var.archetype) },
         {
@@ -19,9 +17,7 @@ locals {
       resource_name             = key
       resource_group_short_name = st.resource_group_short_name
       location                  = location
-      account_replication_type  = st.account_replication_type
-      access_tier               = st.access_tier
-      account_tier              = st.account_tier
+      account_sku_name          = st.account_sku_name
       shared_access_key_enabled = st.shared_access_key_enabled
       network_rules = {
         creator_ip_rule = false
@@ -64,9 +60,8 @@ module "storage_account" {
 
   enable_telemetry = false
 
-  access_tier                     = each.value.access_tier
-  account_replication_type        = each.value.account_replication_type
-  account_tier                    = each.value.account_tier
+  account_sku_name = each.value.account_sku_name
+
   shared_access_key_enabled       = each.value.shared_access_key_enabled
   public_network_access_enabled   = each.value.network_rules["default_action"] == "Deny" ? false : true
   allow_nested_items_to_be_public = each.value.network_rules["default_action"] == "Deny" ? false : true
