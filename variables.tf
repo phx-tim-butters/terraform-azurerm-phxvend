@@ -24,11 +24,11 @@ variable "subscription_details" {
     subscription_update_existing                          = optional(bool, false)
     subscription_workload                                 = optional(string, null)
   })
-  description = "A Map of the Subscription details"
+  description = "Subscription vending and governance settings consumed by the ALZ subscription vending module, including alias, billing scope, tags, and management group association options."
 }
 
 variable "network_topology_details" {
-  description = "Network Details for the environment"
+  description = "Global network topology switches for this environment, including hub peering behavior, gateway usage, and optional Virtual WAN hub mappings."
   type = object({
     network_type                  = optional(string, "")
     create_gateways               = optional(bool, false)
@@ -49,13 +49,13 @@ variable "network_topology_details" {
 }
 
 variable "resource_groups_lock_override" {
-  description = "override configured resource group locks and do not create"
+  description = "When true, disables lock creation for all resource groups, regardless of per-group lock settings."
   type        = bool
   default     = false
 }
 
 variable "default_resource_group_tags" {
-  description = "A map of strings that dictate the default templated resource group tagging"
+  description = "Default tag map applied to templated resources and merged with resource-specific tags. Supports token replacement in local templating logic."
   default     = {}
   type        = map(string)
 }
@@ -75,6 +75,7 @@ variable "rsv_settings" {
 }
 
 variable "resource_groups" {
+  description = "Map of custom resource groups to merge with templated baseline resource groups. Keys are logical short names used by dependent resources."
   type = map(
     object({
       resource_name           = string
@@ -89,7 +90,7 @@ variable "resource_groups" {
 }
 
 variable "virtual_networks" {
-  description = "Map of all Virtual Network"
+  description = "Map of virtual networks and their subnet/peering definitions. Each entry is transformed into vend-ready VNet and subnet configuration."
   type = map(
     object({
       resource_name             = string
@@ -133,6 +134,7 @@ variable "virtual_networks" {
 }
 
 variable "route_tables" {
+  description = "Map of route tables and routes to create and associate with subnets. Route table keys are composed into location-aware resource identifiers."
   type = map(
     object({
       resource_name                 = string
@@ -196,13 +198,13 @@ variable "network_security_group_custom_default_rules" {
 }
 
 variable "recovery_services_vault" {
-  description = "Legacy placeholder for recovery services vault settings"
+  description = "Legacy placeholder for Recovery Services Vault configuration. Retained for backward compatibility; use rsv_settings and azure_backup_templated_policies for active behavior."
   type        = map(any)
   default     = {}
 }
 
 variable "storage_accounts" {
-  description = "Map of custom storage accounts to merge with templated storage accounts"
+  description = "Map of custom storage accounts to merge with templated baseline storage accounts (for example flow log storage), including network rule behavior."
   type = map(object({
     resource_name             = string
     resource_group_short_name = string
@@ -220,18 +222,19 @@ variable "storage_accounts" {
 }
 
 variable "bastion_address_spaces" {
-  description = "List of all Bastion IP Address Ranges"
+  description = "List of CIDR ranges used for Azure Bastion. Used by NSG rule logic where Bastion-aware rules are required."
   type        = list(string)
   default     = [""]
 }
 
 variable "paas_allowed_ip_addresses" {
-  type    = list(string)
-  default = []
+  description = "List of allowed public IP CIDR entries used when storage account network rules enable creator IP rule behavior."
+  type        = list(string)
+  default     = []
 }
 
 variable "azure_backup_templated_policies" {
-  description = "A map of templated Azure Backup Policies to apply to the Recovery Services Vault"
+  description = "Map of custom Azure Backup policy templates applied to each created Recovery Services Vault variant (LRS/GRS/ZRS where applicable)."
   type = map(object({
     name                            = string
     instance_restore_retention_days = number

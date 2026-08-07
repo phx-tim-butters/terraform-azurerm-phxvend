@@ -48,6 +48,7 @@ variable "network_security_group_custom_default_rules" {
 }
 
 variable "network_security_group_properties" {
+  description = "Behavior flags and context values used to construct baseline NSG rules (explicit deny toggles, subnet ranges, Bastion ranges, and subnet name context)."
   type = object({
     enable_explicit_inbound_deny  = optional(bool, true)
     enable_explicit_outbound_deny = optional(bool, true)
