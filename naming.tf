@@ -64,7 +64,7 @@ locals {
 # For generated list of Resources within this module, generate all names
 module "naming" {
   source   = "phx-tim-butters/phxnaming/azurerm"
-  version  = "0.1.4"
+  version  = "0.1.7"
   for_each = local.resources
 
   archetype             = try(each.value.workload, var.archetype)
@@ -113,7 +113,7 @@ locals {
 # As we need to also name the NSGs for any subsequent Subnets that get created which depends on vending already completed - we need to shout up to the Naming module seperately on a per subnet basis to not get cycle dependancy.
 module "naming_post_vend" {
   source   = "phx-tim-butters/phxnaming/azurerm"
-  version  = "0.1.4"
+  version  = "0.1.7"
   for_each = local.post_vend_naming
 
   archetype             = try(each.value.workload, var.archetype)
