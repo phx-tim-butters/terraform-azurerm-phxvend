@@ -10,7 +10,7 @@ locals {
     key_name                     = "${vnet.location}-${vnet.resource_name}"
     address_space                = vnet.address_space
     resource_group_key           = vnet.existing_resource_group_short_name != null ? null : "${vnet.location}-${vnet.resource_group_short_name}"
-    resource_group_name_existing = vnet.existing_resource_group_short_name != null ? var.existing_resource_groups["${vnet.location}-${vnet.existing_resource_group_short_name}"] : null
+    resource_group_name_existing = vnet.existing_resource_group_short_name != null ? var.existing_resource_groups["${vnet.location}-${vnet.existing_resource_group_short_name}"].resource_name : null
     location                     = vnet.location
 
     dns_servers = vnet.dns_servers
