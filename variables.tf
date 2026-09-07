@@ -93,13 +93,14 @@ variable "virtual_networks" {
   description = "Map of virtual networks and their subnet/peering definitions. Each entry is transformed into vend-ready VNet and subnet configuration."
   type = map(
     object({
-      resource_name             = string
-      resource_group_short_name = string
-      location                  = string
-      address_space             = list(string)
-      dns_servers               = optional(list(string), [])
-      enable_nat_gw             = optional(bool, false)
-      hub_connection            = optional(bool, false)
+      resource_name                      = string
+      resource_group_short_name          = string
+      existing_resource_group_short_name = optional(string, null)
+      location                           = string
+      address_space                      = list(string)
+      dns_servers                        = optional(list(string), [])
+      enable_nat_gw                      = optional(bool, false)
+      hub_connection                     = optional(bool, false)
       subnets = list(
         object({
           route_table_short_name          = optional(string, "")
@@ -137,10 +138,11 @@ variable "route_tables" {
   description = "Map of route tables and routes to create and associate with subnets. Route table keys are composed into location-aware resource identifiers."
   type = map(
     object({
-      resource_name                 = string
-      resource_group_short_name     = string
-      location                      = string
-      bgp_route_propagation_enabled = bool
+      resource_name                      = string
+      resource_group_short_name          = string
+      existing_resource_group_short_name = optional(string, null)
+      location                           = string
+      bgp_route_propagation_enabled      = bool
       routes = optional(list(
         object({
           name                   = string
@@ -154,15 +156,21 @@ variable "route_tables" {
   default = {}
 }
 
+variable "existing_resource_groups" {
+  type    = map(any)
+  default = {}
+}
+
 variable "network_security_groups" {
   description = "Map of per-subnet NSG custom rule packs"
   type = map(object({
-    resource_name                 = string
-    resource_group_short_name     = string
-    virtual_network_short_name    = optional(string, "")
-    location                      = string
-    enable_explicit_inbound_deny  = optional(bool, true)
-    enable_explicit_outbound_deny = optional(bool, false)
+    resource_name                      = string
+    resource_group_short_name          = string
+    existing_resource_group_short_name = optional(string, null)
+    virtual_network_short_name         = optional(string, "")
+    location                           = string
+    enable_explicit_inbound_deny       = optional(bool, true)
+    enable_explicit_outbound_deny      = optional(bool, false)
     rules = optional(list(
       object({
         name                         = string
@@ -206,11 +214,12 @@ variable "recovery_services_vault" {
 variable "storage_accounts" {
   description = "Map of custom storage accounts to merge with templated baseline storage accounts (for example flow log storage), including network rule behavior."
   type = map(object({
-    resource_name             = string
-    resource_group_short_name = string
-    location                  = string
-    account_sku_name          = string
-    shared_access_key_enabled = bool
+    resource_name                      = string
+    resource_group_short_name          = string
+    existing_resource_group_short_name = optional(string, null)
+    location                           = string
+    account_sku_name                   = string
+    shared_access_key_enabled          = bool
     network_rules = object({
       creator_ip_rule = bool
       default_action  = string
