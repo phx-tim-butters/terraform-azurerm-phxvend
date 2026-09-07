@@ -1,12 +1,12 @@
 locals {
-  recovery_services_vault_regions = { for location in var.templated_locations : location => {
+  recovery_services_vault_regions = var.existing_resource_groups == null ? { for location in var.templated_locations : location => {
     resource_name              = ""
     resource_group_short_name  = "bcdr"
     location                   = location
     zonal_region               = lookup(local.zonal_regions, location, false)
     vault_resource_group_name  = local.resource_groups["${location}-bcdr"].name
     backup_resource_group_name = local.resource_groups["${location}-backup"].name
-  } }
+  } } : {}
 }
 
 module "recovery_service_vaults" {
