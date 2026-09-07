@@ -24,17 +24,6 @@ locals {
       )
     }
     ,
-    # Construct Namings for Additional Network Security Groups not tied to a subnet
-    { for k, v in local.default_region_resource_groups : "network_security_group-${v.location}-${v.resource_group_short_name}-${v.resource_name}" => merge(
-      v
-      ,
-      {
-        resource_type         = "network_security_group"
-        workload_abbreviation = try(v.workload_abbreviation, var.workload_abbreviation)
-        archetype             = try(v.archetype, var.archetype)
-      })
-    }
-    ,
     # Construct Namings for Route Tables
     { for k, v in var.route_tables : "route_table-${v.location}-${v.resource_name}" => merge(
       v

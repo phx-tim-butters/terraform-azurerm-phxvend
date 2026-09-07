@@ -2,7 +2,7 @@ locals {
   // Default Resource Groups to stamp on all areas if not explicitly defined
   default_resource_groups = {
     network = {
-      tags         = { for key, value in var.default_resource_group_tags : key => replace(replace(replace(value, "*GROUPNAME*", "Network Resources"), "*ARCH*", var.archetype), "*WORK*", var.workload_abbreviation }
+      tags         = { for key, value in var.default_resource_group_tags : key => replace(replace(replace(value, "*GROUPNAME*", "Network Resources"), "*ARCH*", var.archetype), "*WORK*", var.workload_abbreviation) }
       lock_enabled = true
     }
     security = {
