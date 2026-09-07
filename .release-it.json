@@ -6,7 +6,8 @@
         "tag": true,
         "tagName": "v${version}",
         "push": true,
-        "changelog": "git log --pretty=format:\"- %s (%h)\" ${from}...${to}"
+        "changelog": "git log --pretty=format:\"- %s (%h)\" ${from}...${to}",
+        "getLatestTagFromAllRefs": true
     },
     "npm": false,
     "github": {
