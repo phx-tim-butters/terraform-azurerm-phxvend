@@ -12,7 +12,7 @@ locals {
         virtual_network_name = vnet.resource_name
 
         network_security_group_custom_rules = try(var.network_security_groups["${vnet.location}-${vnet.resource_name}-${subnet_key}"], {})
-        route_table_id                      = try(module.vend.route_table_resource_ids["${vnet.location}-${vnet.resource_name}-${subnet_key}"], null)
+        route_table_id                      = try(module.vend.route_table_resource_ids["${vnet.location}-${vnet.resource_name}-${subnet_key}"], module.vend.route_table_resource_ids["${vnet.location}-${subnet.route_table_short_name}"], null)
 
         address_prefixes = [subnet.subnet_address_space]
 
