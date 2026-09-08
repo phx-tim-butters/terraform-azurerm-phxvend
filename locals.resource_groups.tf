@@ -67,12 +67,12 @@ locals {
   )
 
   # Generate a readied list of Resource Groups to pass to vend module, grab the generated name from the naming module. Establish Key name, and final merge of tags.
-  resource_groups = { for key, group in local.resource_groups_merged : key => merge(
+  resource_groups = length(var.existing_resource_groups) == 0 ? { for key, group in local.resource_groups_merged : key => merge(
     group,
     {
       name     = module.naming["resource_group-${key}"].name
       key_name = "${group.location}-${group.resource_name}"
       tags     = merge(var.default_resource_group_tags, try(group.tags, {}))
     })
-  }
+  } : {}
 }

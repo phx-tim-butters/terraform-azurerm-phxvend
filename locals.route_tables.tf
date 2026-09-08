@@ -1,5 +1,5 @@
 locals {
-  route_tables = { for key, route_table in var.route_tables : "${route_table.location}-${route_table.resource_name}" => merge(
+  route_tables = length(var.existing_resource_groups) == 0 ? { for key, route_table in var.route_tables : "${route_table.location}-${route_table.resource_name}" => merge(
     route_table
     ,
     {
@@ -13,5 +13,5 @@ locals {
 
       routes = { for route in route_table.routes : route.name => route }
     })
-  }
+  } : {}
 }
