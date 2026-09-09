@@ -114,7 +114,7 @@ variable "virtual_networks" {
       address_space                      = list(string)
       dns_servers                        = optional(list(string), [])
       enable_nat_gw                      = optional(bool, false)
-      hub_connection                     = optional(bool, false)
+      hub_connection                     = optional(bool, true)
       subnets = list(
         object({
           route_table_short_name          = optional(string, "")

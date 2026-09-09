@@ -216,7 +216,3 @@ module "vend" {
   module_avm_res_network_networksecuritygroup_version = "0.5.1"
   module_avm_res_network_virtualnetwork_version       = "0.22.2"
 }
-
-output "vend" {
-  value = values(module.vend.resource_outputs["resource_groups"])[0]
-}
