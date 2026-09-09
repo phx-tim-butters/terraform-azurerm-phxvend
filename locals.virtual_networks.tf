@@ -9,8 +9,8 @@ locals {
     name                         = module.naming["virtual_network-${vnet.location}-${vnet.resource_name}"].name
     key_name                     = "${vnet.location}-${vnet.resource_name}"
     address_space                = vnet.address_space
-    resource_group_key           = vnet.existing_resource_group_short_name != null ? null : "${vnet.location}-${vnet.resource_group_short_name}"
-    resource_group_name_existing = vnet.existing_resource_group_short_name != null ? var.existing_resource_groups["${vnet.location}-${vnet.existing_resource_group_short_name}"].resource_name : null
+    resource_group_key           = local.post_run_environment ? null : "${vnet.location}-${vnet.resource_group_short_name}"
+    resource_group_name_existing = local.post_run_environment ? var.post_run_resources["resource_groups"]["${vnet.location}-${vnet.resource_group_short_name}"]["created_resource"].resource_name : null
     location                     = vnet.location
 
     dns_servers = vnet.dns_servers
@@ -22,8 +22,8 @@ locals {
       allow_gateway_transit = var.network_topology_details.create_gateways
     }
 
-    vwan_connection_enabled = var.network_topology_details.hub_peering_enabled && var.network_topology_details.network_type == "Vwan" ? true : false
-    hub_peering_enabled     = var.network_topology_details.hub_peering_enabled && var.network_topology_details.network_type != "Vwan" && vnet.resource_name != "hub" ? var.network_topology_details.hub_peering_enabled : false
+    vwan_connection_enabled = var.network_topology_details.hub_peering_enabled && var.network_topology_details.network_type == "Vwan" && vnet.hub_connection ? var.network_topology_details.hub_peering_enabled : false
+    hub_peering_enabled     = var.network_topology_details.hub_peering_enabled && var.network_topology_details.network_type != "Vwan" && vnet.resource_name != "hub" && vnet.hub_connection ? var.network_topology_details.hub_peering_enabled : false
 
     hub_network_resource_id = var.network_topology_details.hub_peering_enabled && var.network_topology_details.network_type != "Vwan" ? try(var.network_topology_details.hub_id[vnet.location], null) : null
 

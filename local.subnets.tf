@@ -1,8 +1,11 @@
 locals {
+
+  network_security_group_custom_rule_map = { for k, v in var.network_security_groups : "${v.location}-${v.virtual_network_short_name}-${v.resource_name}" => v }
+
   subnets = merge([
     for vnet_key, vnet in var.virtual_networks : {
       for subnet_key, subnet in vnet.subnets :
-      "${vnet_key}-${subnet_key}" => merge(subnet, {
+      "${vnet_key}-${subnet.name}" => merge(subnet, {
 
         resource_name             = subnet.name
         location                  = vnet.location
@@ -11,8 +14,8 @@ locals {
         virtual_network_id   = module.vend.virtual_network_resource_ids["${vnet.location}-${vnet.resource_name}"]
         virtual_network_name = vnet.resource_name
 
-        network_security_group_custom_rules = try(var.network_security_groups["${vnet.location}-${vnet.resource_name}-${subnet_key}"], {})
-        route_table_id                      = try(module.vend.route_table_resource_ids["${vnet.location}-${vnet.resource_name}-${subnet_key}"], module.vend.route_table_resource_ids["${vnet.location}-${subnet.route_table_short_name}"], null)
+        network_security_group_custom_rules = { for v in try(local.network_security_group_custom_rule_map["${vnet.location}-${vnet.resource_name}-${subnet.name}"].rules, []) : v.name => v }
+        route_table_id                      = !local.post_run_environment ? try(module.vend.route_table_resource_ids["${vnet.location}-${subnet.route_table_short_name}"], null) : try(var.post_run_resources["route_tables"]["${vnet.location}-${subnet.route_table_short_name}"]["created_resource"].resource_id, null)
 
         address_prefixes = [subnet.subnet_address_space]
 
@@ -39,8 +42,8 @@ module "subnets" {
 
   subnet                                  = each.value
   virtual_network_id                      = each.value.virtual_network_id
-  network_security_group_custom_rules     = merge(try(each.value.network_security_group_custom_rules.rules, {}), try(var.network_security_group_custom_default_rules, {}))
-  network_security_group_name_prefix      = module.naming_post_vend["network_security_group-${each.value.location}-${each.value.resource_group_short_name}-${each.value.resource_name}"].name
+  network_security_group_custom_rules     = merge(try(each.value.network_security_group_custom_rules, {}), try(var.network_security_group_custom_default_rules, {}))
+  network_security_group_name_prefix      = module.naming_post_vend["network_security_group-${each.value.location}-${each.value.virtual_network_name}-${each.value.resource_name}"].name
   network_security_group_creation_enabled = true
 
   tags = merge(var.default_resource_group_tags, try(each.value.tags, {}))

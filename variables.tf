@@ -48,6 +48,11 @@ variable "network_topology_details" {
   }
 }
 
+variable "post_run_resources" {
+  description = "Resources from the previous run that are being fed into the post-run environment."
+  default     = {}
+}
+
 variable "resource_groups_lock_override" {
   description = "When true, disables lock creation for all resource groups, regardless of per-group lock settings."
   type        = bool
@@ -84,6 +89,15 @@ variable "resource_groups" {
       lock_enabled            = optional(bool, true) // Should this resource group have a lock applied to it?
       lock_name               = optional(string, "")
       tags                    = optional(map(string), {})
+      created_resource = optional(object({
+        resource_name       = string
+        resource_group_name = string
+        resource_id         = string
+        }), {
+        resource_name       = null,
+        resource_group_name = null,
+        resource_id         = null
+      })
     })
   )
   default = {}
@@ -138,11 +152,10 @@ variable "route_tables" {
   description = "Map of route tables and routes to create and associate with subnets. Route table keys are composed into location-aware resource identifiers."
   type = map(
     object({
-      resource_name                      = string
-      resource_group_short_name          = string
-      existing_resource_group_short_name = optional(string, null)
-      location                           = string
-      bgp_route_propagation_enabled      = bool
+      resource_name                 = string
+      resource_group_short_name     = string
+      location                      = string
+      bgp_route_propagation_enabled = bool
       routes = optional(list(
         object({
           name                   = string
@@ -151,13 +164,17 @@ variable "route_tables" {
           next_hop_in_ip_address = optional(string, "")
       })), [])
       tags = optional(map(string), {})
+      created_resource = optional(object({
+        resource_name       = string
+        resource_group_name = string
+        resource_id         = string
+        }), {
+        resource_name       = null,
+        resource_group_name = null,
+        resource_id         = null
+      })
     })
   )
-  default = {}
-}
-
-variable "existing_resource_groups" {
-  type    = map(any)
   default = {}
 }
 
@@ -214,12 +231,11 @@ variable "recovery_services_vault" {
 variable "storage_accounts" {
   description = "Map of custom storage accounts to merge with templated baseline storage accounts (for example flow log storage), including network rule behavior."
   type = map(object({
-    resource_name                      = string
-    resource_group_short_name          = string
-    existing_resource_group_short_name = optional(string, null)
-    location                           = string
-    account_sku_name                   = string
-    shared_access_key_enabled          = bool
+    resource_name             = string
+    resource_group_short_name = string
+    location                  = string
+    account_sku_name          = string
+    shared_access_key_enabled = bool
     network_rules = object({
       creator_ip_rule = bool
       default_action  = string

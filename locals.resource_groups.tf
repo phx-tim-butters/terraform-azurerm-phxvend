@@ -75,6 +75,6 @@ locals {
         key_name = "${group.location}-${group.resource_name}"
         tags     = merge(var.default_resource_group_tags, try(group.tags, {}))
       }
-    ) if length(var.existing_resource_groups) == 0
+    ) if !local.post_run_environment
   }
 }

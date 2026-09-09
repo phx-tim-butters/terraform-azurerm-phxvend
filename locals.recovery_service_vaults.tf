@@ -1,5 +1,5 @@
 locals {
-  recovery_services_vault_regions = length(var.existing_resource_groups) == 0 ? { for location in var.templated_locations : location => {
+  recovery_services_vault_regions = !local.post_run_environment ? { for location in var.templated_locations : location => {
     resource_name              = ""
     resource_group_short_name  = "bcdr"
     location                   = location

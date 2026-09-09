@@ -74,12 +74,12 @@ module "naming" {
 
 locals {
   post_vend_naming = merge(
-    { for k, v in local.subnets : "network_security_group-${v.location}-${v.resource_group_short_name}-${v.resource_name}" => merge(
+    { for k, v in local.subnets : "network_security_group-${v.location}-${v.virtual_network_name}-${v.resource_name}" => merge(
       v
       ,
       {
         resource_type = "network_security_group"
-        structure     = join("-", [for p in split("-", var.structure) : p if lower(p) != "name"])
+        resource_name = v.virtual_network_name
       })
     }
     ,

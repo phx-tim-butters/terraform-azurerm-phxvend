@@ -38,13 +38,14 @@ locals {
   )
 
   # Generate a readied list of Storage Accounts to pass to vend module, grab the generated name from the naming module. Establish Key name, and final merge of tags.
-  storage_accounts = length(var.existing_resource_groups) == 0 ? { for key, st in local.storage_accounts_merged : key => merge(
+  storage_accounts = { for key, st in local.storage_accounts_merged : key => merge(
     st,
     {
       name     = module.naming["storage_account-${st.location}-${st.resource_name}"].global_name
       key_name = "${st.location}-${st.resource_name}"
-    })
-  } : {}
+    }
+    ) if !local.post_run_environment
+  }
 }
 
 

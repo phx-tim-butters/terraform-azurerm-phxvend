@@ -34,7 +34,7 @@ locals {
   org_abbreviation      = "exm"
   deploy_abbreviation   = "" // is this being deployed to a seperate environment (like dev) where all the resources need appending?
   structure             = "TYPE-ORG-REGION-WORK-NAME"
-  workload_abbreviation = "exm-vend-full"
+  workload_abbreviation = "exm-vend-full-post"
 
   #### Subscriptions and Tenant Detail ####
   tenant_id = var.tenant_id
@@ -119,7 +119,7 @@ locals {
       subnets = [
         {
           route_table_short_name         = "DefaultToFirewall"
-          nsg_short_name                 = "snet-example"
+          nsg_short_name                 = "snet-servers"
           name                           = "snet-example"
           privateEndpointNetworkPolicies = "Enabled"
           subnet_address_space           = "10.64.16.0/23"
@@ -131,6 +131,38 @@ locals {
           name                           = "snet-example1"
           privateEndpointNetworkPolicies = "Enabled"
           subnet_address_space           = "10.64.18.0/23"
+          nat_gateway_id                 = ""
+        }
+      ]
+      peerings = []
+      tags     = {}
+    }
+  }
+
+  virtual_networks_post = {
+    spoke = {
+      resource_name             = "spoke-post"
+      resource_group_short_name = "network"
+      location                  = "uksouth"
+      hub_connection            = false
+      address_space             = ["10.65.16.0/20"]
+      dns_servers = [
+      ]
+      subnets = [
+        {
+          route_table_short_name         = "DefaultToFirewall"
+          nsg_short_name                 = "snet-example"
+          name                           = "snet-example"
+          privateEndpointNetworkPolicies = "Enabled"
+          subnet_address_space           = "10.65.16.0/23"
+          nat_gateway_id                 = ""
+        },
+        {
+          route_table_short_name         = ""
+          nsg_short_name                 = "snet-example1"
+          name                           = "snet-example1"
+          privateEndpointNetworkPolicies = "Enabled"
+          subnet_address_space           = "10.65.18.0/23"
           nat_gateway_id                 = ""
         }
       ]
@@ -167,6 +199,8 @@ locals {
     }
   }
 
+  network_security_groups_post = {}
+
   route_tables = {
     DefaultToFirewall = {
       resource_name                 = "DefaultToFirewall"
@@ -184,6 +218,8 @@ locals {
       ]
     }
   }
+
+  route_tables_post = {}
 }
 
 module "vend" {
@@ -217,6 +253,42 @@ module "vend" {
   module_avm_res_network_virtualnetwork_version       = "0.22.2"
 }
 
-output "vend" {
-  value = values(module.vend.resource_outputs["resource_groups"])[0]
+# Example of where we are creating an environment based on the outputs of another with the intention that they are the same environment. 
+# We may need this in ALZ's where we need to create Connectivity Resource Groups first, then Hub networking, and then further Connectivity spoke networks (like DNS etc...)
+# Here we are specifying the existing_resource_groups map with outputs from a previous deployment
+# This causes the module to not deploy templated artefacts (because they already existing in the previous deployment).
+# But we are sending in Virtual Networks and Route Tables, but appending the existing_resource_group_short_name attribute to the map we inject
+module "vend_post" {
+  source = "../.."
+
+  subscription_details = local.subscription_details
+  default_location     = local.default_location
+  templated_locations  = local.templated_locations
+
+  network_topology_details = local.network_topology_details
+
+  post_run_resources = module.vend.resource_outputs
+
+  org_abbreviation      = local.org_abbreviation
+  deploy_abbreviation   = local.deploy_abbreviation
+  structure             = local.structure
+  workload_abbreviation = local.workload_abbreviation
+
+  resource_groups = {}
+  route_tables    = {}
+
+  resource_groups_lock_override = local.resource_groups_lock_override
+  default_resource_group_tags   = local.default_resource_group_tags
+
+  virtual_networks = local.virtual_networks_post
+
+  bastion_address_spaces                      = local.bastion_address_spaces
+  network_security_group_custom_default_rules = local.network_security_group_custom_default_rules
+
+  network_security_groups = local.network_security_groups_post
+
+  module_phx_naming_version                           = "0.1.8"
+  module_avm_res_storage_storageaccount_version       = "0.10.0"
+  module_avm_res_network_networksecuritygroup_version = "0.5.1"
+  module_avm_res_network_virtualnetwork_version       = "0.22.2"
 }

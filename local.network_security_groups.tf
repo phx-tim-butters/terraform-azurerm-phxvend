@@ -9,7 +9,7 @@ module "network_security_group" {
 
   default_location = try(each.value.location, var.default_location)
 
-  network_security_group_name = module.naming["network_security_group-${each.value.location}-${each.value.resource_group_short_name}-${each.value.resource_name}"].name
+  network_security_group_name = module.naming["network_security_group-${each.value.location}-${each.value.virtual_network_short_name}-${each.value.resource_name}"].name
   resource_group_name         = module.naming["resource_group-${each.value.location}-${each.value.resource_group_short_name}"].name
 
   network_security_group_properties = {
