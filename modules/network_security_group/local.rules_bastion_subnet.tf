@@ -1,6 +1,6 @@
 locals {
   bastion_subnet_rules = {
-    Allow-HTTPs-Inbound = {
+    AllowHttpsInbound = {
       name        = ""
       access      = "allow"
       direction   = "Inbound"
@@ -16,7 +16,7 @@ locals {
         "443"
       ]
     }
-    Allow-BastionControlPlane-Inbound = {
+    AllowGatewayManagerInbound = {
       name        = ""
       access      = "allow",
       direction   = "Inbound",
@@ -32,7 +32,7 @@ locals {
         "443"
       ]
     }
-    Allow-BastionDataPlane-Inbound = {
+    AllowBastionHostCommunication = {
       name        = ""
       access      = "allow",
       direction   = "Inbound",
@@ -79,13 +79,13 @@ locals {
       source_port_ranges           = ["*"]
       destination_port_ranges      = ["*"]
     }
-    Allow-BastionSshRdp-Outbound = {
+    AllowSshRdpOutbound = {
       name                    = ""
       access                  = "allow",
       direction               = "Outbound",
       description             = "",
       priority                = "151",
-      protocol                = "tcp",
+      protocol                = "*",
       source_address_prefixes = ["*"]
       destination_address_prefixes = [
         "TAG-VirtualNetwork"
@@ -96,7 +96,7 @@ locals {
         "3389"
       ]
     }
-    Allow-BastionAzureCloud-Outbound = {
+    AllowAzureCloudOutbound = {
       name                    = ""
       access                  = "allow",
       direction               = "Outbound",
@@ -112,13 +112,13 @@ locals {
         "443"
       ]
     }
-    Allow-BastionDataPlane-Outbound = {
+    AllowBastionCommunication = {
       name        = ""
       access      = "allow",
       direction   = "Outbound",
       description = "",
       priority    = "153",
-      protocol    = "tcp",
+      protocol    = "*",
       source_address_prefixes = [
         "TAG-VirtualNetwork"
       ],
@@ -131,13 +131,13 @@ locals {
         "5701"
       ]
     }
-    Allow-BastionSessionInfo-Outbound = {
+    AllowHttpOutbound = {
       name                    = ""
       access                  = "allow",
       direction               = "Outbound",
       description             = "",
       priority                = "154",
-      protocol                = "tcp",
+      protocol                = "*",
       source_address_prefixes = ["*"]
       destination_address_prefixes = [
         "TAG-Internet"
