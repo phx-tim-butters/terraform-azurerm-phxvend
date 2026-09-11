@@ -47,7 +47,7 @@ locals {
       group,
       {
         resource_name             = key
-        location                  = try(group.location, var.default_location)
+        location                  = location
         resource_group_short_name = key
         lock_enabled              = var.resource_groups_lock_override ? false : group.lock_enabled
         lock_name                 = "CanNotDelete"
