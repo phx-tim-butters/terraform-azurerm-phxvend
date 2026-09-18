@@ -1,32 +1,38 @@
 locals {
+  resolved_default_resource_group_tags = {
+    for group_key, group in var.templated_resource_groups : group_key => {
+      for tag_key, tag_value in var.default_resource_group_tags : tag_key =>
+      replace(
+        replace(tag_value, "*WORK*", var.workload_abbreviation),
+        "*ARCH*",
+        var.archetype
+      )
+    }
+  }
+
   // Default Resource Groups to stamp on all areas if not explicitly defined
   default_resource_groups = {
-    network = {
-      tags         = { for key, value in var.default_resource_group_tags : key => replace(replace(replace(value, "*GROUPNAME*", "Network Resources"), "*ARCH*", var.archetype), "*WORK*", var.workload_abbreviation) }
-      lock_enabled = true
-    }
-    security = {
-      tags         = { for key, value in var.default_resource_group_tags : key => replace(replace(replace(value, "*GROUPNAME*", "Security Resources"), "*ARCH*", var.archetype), "*WORK*", var.workload_abbreviation) }
-      lock_enabled = true
-    }
-    storage = {
-      tags         = { for key, value in var.default_resource_group_tags : key => replace(replace(replace(value, "*GROUPNAME*", "Storage Resources"), "*ARCH*", var.archetype), "*WORK*", var.workload_abbreviation) }
-      lock_enabled = true
-    }
-    bcdr = {
-      tags         = { for key, value in var.default_resource_group_tags : key => replace(replace(replace(value, "*GROUPNAME*", "BCDR Resources"), "*ARCH*", var.archetype), "*WORK*", var.workload_abbreviation) }
-      lock_enabled = true
-    }
-    backup = {
-      tags         = { for key, value in var.default_resource_group_tags : key => replace(replace(replace(value, "*GROUPNAME*", "Backup Resources"), "*ARCH*", var.archetype), "*WORK*", var.workload_abbreviation) }
-      lock_enabled = false
-    }
+    for key, group in var.templated_resource_groups : key => merge(
+      group,
+      {
+        tags = merge(
+          local.resolved_default_resource_group_tags[key],
+          {
+            for replacement in group.tags_to_replace : replacement.tag_key => replace(
+              local.resolved_default_resource_group_tags[key][replacement.tag_key],
+              replacement.key_to_replace,
+              replacement.value
+            ) if contains(keys(local.resolved_default_resource_group_tags[key]), replacement.tag_key)
+          }
+        )
+      }
+    )
   }
 }
 
 locals {
-  // We need to get a list of all locations we're deploying baseline templates to. so grab the default location and also get any templated deployed locations to produce a set of strings.
-  locations = distinct(concat(var.templated_locations, formatlist(var.default_location)))
+  // We need to get a list of all locations we're deploying baseline templates to.
+  locations = distinct(concat(var.templated_locations, [var.default_location]))
 }
 
 locals {

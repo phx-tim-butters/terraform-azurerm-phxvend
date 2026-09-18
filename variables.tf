@@ -9,6 +9,65 @@ variable "templated_locations" {
   default     = []
 }
 
+variable "templated_resource_groups" {
+  type = map(object({
+    resource_name = string
+    tags_to_replace = optional(list(object({
+      tag_key        = string
+      key_to_replace = string
+      value          = string
+    })), [])
+    lock_enabled = optional(bool, false)
+  }))
+  default = {
+    network = {
+      resource_name = "network"
+      tags_to_replace = [{
+        tag_key        = "Service"
+        key_to_replace = "*GROUPNAME*"
+        value          = "Network Resources"
+      }]
+      lock_enabled = true
+    }
+    security = {
+      resource_name = "security"
+      tags_to_replace = [{
+        tag_key        = "Service"
+        key_to_replace = "*GROUPNAME*"
+        value          = "Security Resources"
+      }]
+      lock_enabled = true
+    }
+    storage = {
+      resource_name = "storage"
+      tags_to_replace = [{
+        tag_key        = "Service"
+        key_to_replace = "*GROUPNAME*"
+        value          = "Storage Resources"
+      }]
+      lock_enabled = true
+    }
+    bcdr = {
+      resource_name = "bcdr"
+      tags_to_replace = [{
+        tag_key        = "Service"
+        key_to_replace = "*GROUPNAME*"
+        value          = "BCDR Resources"
+      }]
+      lock_enabled = true
+    }
+    backup = {
+      resource_name = "backup"
+      tags_to_replace = [{
+        tag_key        = "Service"
+        key_to_replace = "*GROUPNAME*"
+        value          = "Backup Resources"
+      }]
+      lock_enabled = false
+    }
+  }
+}
+
 variable "subscription_details" {
   type = object({
     subscription_alias_enabled                            = optional(bool, false)

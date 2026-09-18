@@ -29,6 +29,12 @@ variable "environment" {
   default     = ""
 }
 
+variable "environment_abbreviate" {
+  type        = bool
+  description = "Flag indicating whether to abbreviate the environment identifier in the ENV placeholder. For example, naming is 'p' instead of 'prod'."
+  default     = true
+}
+
 variable "deploy_abbreviation" {
   type        = string
   default     = ""

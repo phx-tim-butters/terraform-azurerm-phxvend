@@ -32,8 +32,9 @@ locals {
   default_location      = "uksouth"   // set to null if you want to enforce locations to come from config 
   templated_locations   = ["uksouth"] // set to null if you want to enforce locations to come from config
   org_abbreviation      = "exm"
+  environment           = "prod"
   deploy_abbreviation   = "" // is this being deployed to a seperate environment (like dev) where all the resources need appending?
-  structure             = "TYPE-ORG-REGION-WORK-NAME"
+  structure             = "TYPE-ORG-REGION-WORK-ENV-NAME"
   workload_abbreviation = "exm-vend-full"
 
   #### Subscriptions and Tenant Detail ####
@@ -196,6 +197,7 @@ module "vend" {
   network_topology_details = local.network_topology_details
 
   org_abbreviation      = local.org_abbreviation
+  environment           = local.environment
   deploy_abbreviation   = local.deploy_abbreviation
   structure             = local.structure
   workload_abbreviation = local.workload_abbreviation

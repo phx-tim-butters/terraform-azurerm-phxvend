@@ -57,7 +57,7 @@ module "naming" {
   archetype             = try(each.value.archetype, var.archetype)
   workload_abbreviation = try(each.value.workload_abbreviation, var.workload_abbreviation)
   org_abbreviation      = var.org_abbreviation
-  env_abbreviation      = try(each.value.environment, var.deploy_abbreviation)
+  env_abbreviation      = var.environment_abbreviate ? try(lower(substr(each.value.environment, 0, 1)), lower(substr(var.environment, 0, 1))) : ""
   structure             = try(each.value.structure, var.structure)
   deploy_abbreviation   = var.deploy_abbreviation
   location              = each.value.location
