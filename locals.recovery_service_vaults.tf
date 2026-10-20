@@ -3,7 +3,6 @@ locals {
     resource_name              = ""
     resource_group_short_name  = "bcdr"
     location                   = location
-    zonal_region               = lookup(local.zonal_regions, location, false)
     vault_resource_group_name  = local.resource_groups["${location}-bcdr"].name
     backup_resource_group_name = local.resource_groups["${location}-backup"].name
   } } : {}
@@ -16,7 +15,7 @@ module "recovery_service_vaults" {
   name_prefix = module.naming_post_vend["recovery_services_vault-${each.value.location}"].name
 
   location                   = try(each.value.location, var.default_location)
-  zonal_region               = each.value.zonal_region
+  zonal_region               = try(length(module.naming_post_vend["recovery_services_vault-${each.value.location}"].region_details[0].zones), 0) > 0
   vault_resource_group_name  = each.value.vault_resource_group_name
   backup_resource_group_name = each.value.backup_resource_group_name
 

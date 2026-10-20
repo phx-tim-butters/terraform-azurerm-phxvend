@@ -29,8 +29,8 @@ provider "azurerm" {
 locals {
   ############### PRIMARY INFORMATION ###############
 
-  default_location      = "uksouth"   // set to null if you want to enforce locations to come from config 
-  templated_locations   = ["uksouth"] // set to null if you want to enforce locations to come from config
+  default_location      = "ukwest"   // set to null if you want to enforce locations to come from config 
+  templated_locations   = ["ukwest"] // set to null if you want to enforce locations to come from config
   org_abbreviation      = "exm"
   deploy_abbreviation   = "" // is this being deployed to a seperate environment (like dev) where all the resources need appending?
   structure             = "TYPE-ORG-REGION-WORK-NAME"
@@ -101,7 +101,7 @@ locals {
     example_test = {
       resource_name             = "example_test"
       resource_group_short_name = "example"
-      location                  = "uksouth"
+      location                  = "ukwest"
     }
   }
 
@@ -109,7 +109,7 @@ locals {
     spoke = {
       resource_name             = "spoke"
       resource_group_short_name = "network"
-      location                  = "uksouth"
+      location                  = "ukwest"
       hub_connection            = false
       address_space             = ["10.64.16.0/20"]
       dns_servers = [
@@ -143,7 +143,7 @@ locals {
     spoke = {
       resource_name             = "spoke-post"
       resource_group_short_name = "network"
-      location                  = "uksouth"
+      location                  = "ukwest"
       hub_connection            = false
       address_space             = ["10.65.16.0/20"]
       dns_servers = [
@@ -176,7 +176,7 @@ locals {
       resource_name              = "snet-example1"
       resource_group_short_name  = "network"
       virtual_network_short_name = "spoke"
-      location                   = "uksouth"
+      location                   = "ukwest"
       rules = [
         {
           name        = "Allow-Example-Test"
@@ -205,7 +205,7 @@ locals {
     DefaultToFirewall = {
       resource_name                 = "DefaultToFirewall"
       resource_group_short_name     = "network"
-      location                      = "uksouth"
+      location                      = "ukwest"
       archetype                     = "prod"
       bgp_route_propagation_enabled = false
       routes = [
@@ -247,7 +247,7 @@ module "vend" {
   network_security_groups = local.network_security_groups
   route_tables            = local.route_tables
 
-  module_phx_naming_version                           = "0.1.8"
+  module_phx_naming_version                           = "0.1.11"
   module_avm_res_storage_storageaccount_version       = "0.10.0"
   module_avm_res_network_networksecuritygroup_version = "0.5.1"
   module_avm_res_network_virtualnetwork_version       = "0.22.2"
@@ -287,7 +287,7 @@ module "vend_post" {
 
   network_security_groups = local.network_security_groups_post
 
-  module_phx_naming_version                           = "0.1.8"
+  module_phx_naming_version                           = "0.1.11"
   module_avm_res_storage_storageaccount_version       = "0.10.0"
   module_avm_res_network_networksecuritygroup_version = "0.5.1"
   module_avm_res_network_virtualnetwork_version       = "0.22.2"
