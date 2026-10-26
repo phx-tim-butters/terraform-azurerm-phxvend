@@ -86,6 +86,12 @@ variable "subscription_details" {
   description = "Subscription vending and governance settings consumed by the ALZ subscription vending module, including alias, billing scope, tags, and management group association options."
 }
 
+variable "network_security_group_association_delay" {
+  description = "Duration to wait after creating an NSG before associating it with a subnet (for example, 5s or 1m). Use 0s to disable the delay."
+  type        = string
+  default     = "5s"
+}
+
 variable "network_topology_details" {
   description = "Global network topology switches for this environment, including hub peering behavior, gateway usage, and optional Virtual WAN hub mappings."
   type = object({

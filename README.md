@@ -19,6 +19,16 @@ The intent of this module is to make environment provisioning predictable and op
 - Consistent naming contract: derive names from a single structure to reduce drift across environments.
 - Repeatable outcomes: keep inputs declarative so environments can be recreated with minimal variance.
 
+## NSG Association Delay
+
+NSGs created by the subnet module wait five seconds before being associated with a subnet. Set `network_security_group_association_delay` on the root module or directly on `modules/subnet` to customize this duration:
+
+```hcl
+network_security_group_association_delay = "10s"
+```
+
+Use `"0s"` to disable the delay. Subnets that do not create an NSG do not wait. Run `terraform init` after upgrading to install the required `hashicorp/time` provider.
+
 ## Terraform Documentation (TFDocs)
 
 <!-- BEGIN_TF_DOCS -->

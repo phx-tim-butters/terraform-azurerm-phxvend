@@ -40,11 +40,12 @@ module "subnets" {
 
   default_location = try(each.value.location, var.default_location)
 
-  subnet                                  = each.value
-  virtual_network_id                      = each.value.virtual_network_id
-  network_security_group_custom_rules     = merge(try(each.value.network_security_group_custom_rules, {}), try(var.network_security_group_custom_default_rules, {}))
-  network_security_group_name_prefix      = module.naming_post_vend["network_security_group-${each.value.location}-${each.value.virtual_network_name}-${each.value.resource_name}"].name
-  network_security_group_creation_enabled = true
+  subnet                                   = each.value
+  virtual_network_id                       = each.value.virtual_network_id
+  network_security_group_custom_rules      = merge(try(each.value.network_security_group_custom_rules, {}), try(var.network_security_group_custom_default_rules, {}))
+  network_security_group_name_prefix       = module.naming_post_vend["network_security_group-${each.value.location}-${each.value.virtual_network_name}-${each.value.resource_name}"].name
+  network_security_group_creation_enabled  = true
+  network_security_group_association_delay = var.network_security_group_association_delay
 
   tags = merge(var.default_resource_group_tags, try(each.value.tags, {}))
 

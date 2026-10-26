@@ -60,6 +60,12 @@ variable "network_security_group_creation_enabled" {
   default     = true
 }
 
+variable "network_security_group_association_delay" {
+  description = "Duration to wait after creating an NSG before associating it with a subnet (for example, 5s or 1m). Use 0s to disable the delay."
+  type        = string
+  default     = "5s"
+}
+
 variable "tags" {
   type        = map(string)
   description = "Tags to apply to the resource object"
