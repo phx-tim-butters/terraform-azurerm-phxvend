@@ -119,6 +119,14 @@ locals {
       ]
       subnets = [
         {
+          route_table_short_name         = ""
+          nsg_short_name                 = "AzureBastionSubnet"
+          name                           = "AzureBastionSubnet"
+          privateEndpointNetworkPolicies = "Enabled"
+          subnet_address_space           = "10.64.20.0/24"
+          nat_gateway_id                 = ""
+        },
+        {
           route_table_short_name         = "DefaultToFirewall"
           nsg_short_name                 = "snet-example"
           name                           = "snet-example"

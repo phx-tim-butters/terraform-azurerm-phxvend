@@ -62,6 +62,10 @@ locals {
       resource_name    = "GatewaySubnet"
       address_prefixes = ["10.64.21.0/24"]
     }
+    AzureBastionSubnet = {
+      resource_name    = "AzureBastionSubnet"
+      address_prefixes = ["10.64.22.0/24"]
+    }
   }
 
   network_security_group_custom_rules = {
