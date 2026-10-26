@@ -25,20 +25,6 @@ locals {
   create_network_security_group = var.network_security_group_creation_enabled && !(strcontains(var.subnet.resource_name, "GatewaySubnet") || strcontains(var.subnet.resource_name, "AzureFirewall")) ? true : false
 }
 
-// Here we add a time_sleep to allow for a small delay before creating the subnet and therefore the association. It's required in instances where protected subnet names need certain rules. 
-// Observed race conditions.
-resource "time_sleep" "network_security_group" {
-  count = local.create_network_security_group ? 1 : 0
-
-  create_duration = var.network_security_group_association_delay
-
-  triggers = {
-    network_security_group_id = module.network_security_group[0].resource_id
-  }
-
-  depends_on = [module.network_security_group]
-}
-
 module "subnet" {
   source  = "Azure/avm-res-network-virtualnetwork/azurerm//modules/subnet"
   version = var.module_avm_res_network_virtualnetwork_version
@@ -51,7 +37,7 @@ module "subnet" {
   private_endpoint_network_policies = try(var.subnet.private_endpoint_network_policies_enabled, false) ? "Enabled" : "Disabled"
 
   network_security_group = local.create_network_security_group ? {
-    id = time_sleep.network_security_group[0].triggers.network_security_group_id
+    id = module.network_security_group[0].resource_id
   } : null
 
   route_table = try(var.subnet.route_table_id, null) != null ? {
