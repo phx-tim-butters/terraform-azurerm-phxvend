@@ -1,7 +1,7 @@
 locals {
   bastion_subnet_rules = {
     AllowHttpsInbound = {
-      name        = ""
+      name        = "AllowHttpsInbound"
       access      = "allow"
       direction   = "Inbound"
       description = ""
@@ -17,7 +17,7 @@ locals {
       ]
     }
     AllowGatewayManagerInbound = {
-      name        = ""
+      name        = "AllowGatewayManagerInbound"
       access      = "allow",
       direction   = "Inbound",
       description = "",
@@ -33,7 +33,7 @@ locals {
       ]
     }
     AllowBastionHostCommunication = {
-      name        = ""
+      name        = "AllowBastionHostCommunication"
       access      = "allow",
       direction   = "Inbound",
       description = "",
@@ -52,7 +52,7 @@ locals {
       ]
     }
     AllowAzureLoadBalancerInbound = {
-      name        = ""
+      name        = "AllowAzureLoadBalancerInbound"
       access      = "allow",
       direction   = "Inbound",
       description = "",
@@ -68,7 +68,7 @@ locals {
       ]
     }
     Deny-All-Inbound = {
-      name                         = ""
+      name                         = "Deny-All-Inbound"
       access                       = "deny",
       direction                    = "Inbound",
       description                  = "",
@@ -80,7 +80,7 @@ locals {
       destination_port_ranges      = ["*"]
     }
     AllowSshRdpOutbound = {
-      name                    = ""
+      name                    = "AllowSshRdpOutbound"
       access                  = "allow",
       direction               = "Outbound",
       description             = "",
@@ -97,7 +97,7 @@ locals {
       ]
     }
     AllowAzureCloudOutbound = {
-      name                    = ""
+      name                    = "AllowAzureCloudOutbound"
       access                  = "allow",
       direction               = "Outbound",
       description             = "",
@@ -113,7 +113,7 @@ locals {
       ]
     }
     AllowBastionCommunication = {
-      name        = ""
+      name        = "AllowBastionCommunication"
       access      = "allow",
       direction   = "Outbound",
       description = "",
@@ -132,7 +132,7 @@ locals {
       ]
     }
     AllowHttpOutbound = {
-      name                    = ""
+      name                    = "AllowHttpOutbound"
       access                  = "allow",
       direction               = "Outbound",
       description             = "",
@@ -148,7 +148,7 @@ locals {
       ]
     }
     Deny-All-Outbound = {
-      name                         = ""
+      name                         = "Deny-All-Outbound"
       access                       = "deny",
       direction                    = "Outbound",
       description                  = "",
