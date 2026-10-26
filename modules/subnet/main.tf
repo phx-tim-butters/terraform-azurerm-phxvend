@@ -57,4 +57,8 @@ module "subnet" {
   route_table = try(var.subnet.route_table_id, null) != null ? {
     id = var.subnet.route_table_id
   } : null
+
+  depends_on = [
+    module.network_security_group
+  ]
 }
