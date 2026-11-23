@@ -46,6 +46,7 @@ module "subnets" {
   network_security_group_name_prefix       = module.naming_post_vend["network_security_group-${each.value.location}-${each.value.virtual_network_name}-${each.value.resource_name}"].name
   network_security_group_creation_enabled  = true
   network_security_group_association_delay = var.network_security_group_association_delay
+  bastion_subnet_address_spaces            = var.bastion_address_spaces
 
   tags = merge(var.default_resource_group_tags, try(each.value.tags, {}))
 
